@@ -16,7 +16,7 @@ public class BubbleSort {
 		System.out.println ( "Hello world from BRIDGES bubblesort\n");
 
 		/** create the "bridge" to the visualization software */
-		bridges = new Bridges<String, Student>(0, "708812679076", "Joan Lucas");
+		bridges = new Bridges<String, Student>(10, "1105532094412", "jepst1");
 
 		/** the user specifies which data structure to use in the sorting algorithm */
 		DataStructureChoice dsChoice = getDataStructureChoice();
