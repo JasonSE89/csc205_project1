@@ -19,8 +19,10 @@ import bridges.base.DLelement;
 
 public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	DLelement<E> header;
+	DLelement<E> last;
 	DLelement<E> finger;
 	int size;
+	int fingerPosition;
 
 	/** Constructor method */
 	public CSC205_Project_1_Linked_List() {
@@ -28,7 +30,10 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		header = new DLelement<E>();
 		header.setLabel("dummy");
 		header.setValue((E) new Object());
+		last = header;
+		finger = header;
 		size = 0;
+		fingerPosition = 0;
 	}
 
 	/**
@@ -37,7 +42,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 * @return the number of elements in this list
 	 */
 	public int size() {
-		throw (new UnsupportedOperationException());
+		return size;
 	}
 
 	/**
@@ -53,7 +58,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 * 
 	 */
 	public DLelement<E> getFinger() {
-		throw (new UnsupportedOperationException());
+		return finger;
 	}
 
 	/**
@@ -71,23 +76,26 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		newItem.setLabel(item.toString());
 		if (size == 0) {
 			header.setNext(newItem);
+			last = header;
 			finger = header.getNext();
 			size++;
 			return true;
 		} else {
 			while (finger.getNext() != null) {
 				finger = finger.getNext();
+				fingerPosition++;
 			}
-				DLelement<E> temp = finger;
-				temp.setNext(newItem);
-				newItem.setPrev(temp);
-				finger = newItem;
-				return true;
-			}
-
+			size++;
+			DLelement<E> temp = finger;
+			temp.setNext(newItem);
+			newItem.setPrev(temp);
+			last = newItem;
+			finger = newItem;
+			fingerPosition++;
+			return true;
 		}
 
-	
+	}
 
 	/**
 	 * Finds and returns the element at the specified position in this list.
@@ -99,8 +107,26 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 *             if the index is out of range (index < 0 || index >= size())
 	 */
 	public E get(int index) {
+		int amount = 0;
+		if (index > fingerPosition) {
+			amount = index - fingerPosition;
+			while (amount > 0) {
+				finger = finger.getNext();
+				fingerPosition++;
+				amount--;
+			}
+			return finger.getValue();
+		} else if (index < fingerPosition) {
+			amount = fingerPosition - index;
+			while (amount > 0) {
+				finger = finger.getPrev();
+				fingerPosition--;
+				amount--;
+			}
+			return finger.getValue();
+		} else
+			return finger.getValue();
 
-		throw (new UnsupportedOperationException());
 	}
 
 	/**
@@ -155,7 +181,13 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 */
 	public String toString() {
 
-		throw (new UnsupportedOperationException());
+		DLelement<E> temp = header.getNext();
+		String allElements = "" + temp.getValue().toString();
+		while (temp.getNext() != null) {
+			temp = temp.getNext();
+			allElements = allElements + ", " + temp.getValue().toString();
+		}
+		return allElements;
 	}
 
 	public int indexOf(Object target) {
