@@ -175,7 +175,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 * @throws IndexOutOfBoundsException
 	 *             if the index is out of range (index < 0 || index >= size())
 	 */
-	public E remove(int index) {
+	public E remove(int index) throws IndexOutOfBoundsException {
 		int amount = 0;
 		if (index > fingerPosition) {
 			amount = index - fingerPosition;
@@ -187,7 +187,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 			DLelement<E> temp = finger;
 			finger = finger.getPrev();
 			finger.setNext(temp.getNext());
-			temp.getNext().setPrev(finger);
+			finger.getNext().setPrev(finger);
 			return finger.getValue();
 		} else if (index < fingerPosition) {
 			amount = fingerPosition - index;
@@ -199,13 +199,13 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 			DLelement<E> temp = finger;
 			finger = finger.getNext();
 			finger.setPrev(temp.getPrev());
-			temp.getPrev().setNext(finger);
+			finger.getNext().setNext(finger);
 			return finger.getValue();
 		} else {
 			DLelement<E> temp = finger;
 			finger = finger.getPrev();
 			finger.setNext(temp.getNext());
-			temp.getNext().setPrev(finger);
+			finger.getNext().setPrev(finger);
 			return finger.getValue();
 
 		}
