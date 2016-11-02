@@ -86,7 +86,7 @@ public class BubbleSort {
 				+ (endTime - startTime) + " milliseconds");   
 		
 		System.out.println ("\n\nThe sorting algorithm was successful:\t\t" + isSorted(theListOfData) + "\n");
-
+		System.out.println(theListOfData.size());
 		/** we can only visualize the List if we are using BRIDGES */
 		if ( useSmallTestData &&
 		     theListOfData instanceof CSC205_Project_1_Linked_List<?> )
