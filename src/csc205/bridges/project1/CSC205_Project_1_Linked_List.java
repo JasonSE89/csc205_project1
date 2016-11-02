@@ -293,16 +293,10 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 				finger = finger.getNext();
 				fingerPosition++;
 			}
-			if(finger.getNext()!=null)
-			{
 			newItem.setPrev(finger);
 			newItem.setNext(finger.getNext());
 			finger.getNext().setPrev(newItem);
 			finger.setNext(newItem);
-			}
-			else
-				newItem.setPrev(finger);
-				finger.setNext(newItem);
 			}
 		 else if (index < fingerPosition) {
 			for (int i = fingerPosition; i > index; i--) {
