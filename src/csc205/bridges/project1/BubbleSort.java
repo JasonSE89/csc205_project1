@@ -58,6 +58,7 @@ public class BubbleSort {
 			for ( int j=0; j < theListOfData.size() - 1; j++ ) {
 
 				/** swap items in positions (j) and (j+1) if out-of-order     */
+
 				if (  theListOfData.get(j).compareTo( theListOfData.get(j+1) ) > 0  ) {
 
 					if ( useSetGet ) {
@@ -67,7 +68,7 @@ public class BubbleSort {
 						theListOfData.set ( j+1, temp ); 
 					} else {  
 						/** use Add and Remove methods, much more time-consuming */
-						Student temp = theListOfData.remove(j);   
+						Student temp = theListOfData.remove(j);  
 						theListOfData.add( j+1, temp );	
 					}
 

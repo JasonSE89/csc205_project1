@@ -88,9 +88,8 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 			DLelement<E> temp = finger;
 			temp.setNext(newItem);
 			newItem.setPrev(temp);
-			last = newItem;
 			finger = newItem;
-			fingerPosition++;
+			last = finger;
 		}
 		size++;
 		return true;
@@ -204,20 +203,23 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException("Array is out of bounds");
 		}
-		if(finger.equals(header.getNext()))
+		if(index==0)
 		{
 			DLelement<E> temp = finger;
 			finger = temp.getNext();
 			header.setNext(finger);
 			finger.setPrev(header);
+			fingerPosition = 0;
 			return temp.getValue();
 		}
-		else if(finger.equals(last))
+		else if(index==size-1)
 		{
 			DLelement<E> temp = last;
 			last = temp.getPrev();
 			last.setPrev(temp.getPrev());
+			finger = last;
 			temp.getPrev().setNext(last);
+			fingerPosition=index;
 			return temp.getValue();
 		}
 		else if (index > fingerPosition) {
@@ -291,31 +293,31 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 				finger = finger.getNext();
 				fingerPosition++;
 			}
-			DLelement<E> temp = finger.getNext();
-			finger.setNext(newItem);
+			if(finger.getNext()!=null)
+			{
 			newItem.setPrev(finger);
-			newItem.setPrev(temp);
-			temp.setPrev(newItem);
-			finger = newItem;
+			newItem.setNext(finger.getNext());
+			finger.getNext().setPrev(newItem);
+			finger.setNext(newItem);
+			}
+			else
+				newItem.setPrev(finger);
+				finger.setNext(newItem);
 			}
 		 else if (index < fingerPosition) {
 			for (int i = fingerPosition; i > index; i--) {
 				finger = finger.getPrev();
 				fingerPosition--;
 			}
-			DLelement<E> temp = finger.getNext();
-			finger.setNext(newItem);
 			newItem.setPrev(finger);
-			newItem.setNext(temp);
-			temp.setPrev(newItem);
-			finger = newItem;
-		} else {
-			DLelement<E> temp = finger.getNext();
+			newItem.setNext(finger.getNext());
+			finger.getNext().setPrev(newItem);
 			finger.setNext(newItem);
+		} else if(fingerPosition==index){
 			newItem.setPrev(finger);
-			newItem.setNext(temp);
-			temp.setPrev(newItem);
-			finger = newItem;
+			newItem.setNext(finger.getNext());
+			finger.getNext().setPrev(newItem);
+			finger.setNext(newItem);
 		}
 		size++;
 		}
