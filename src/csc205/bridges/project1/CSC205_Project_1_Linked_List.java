@@ -74,10 +74,10 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		DLelement<E> newItem = new DLelement<E>();
 		newItem.setValue(item);
 		newItem.setLabel(item.toString());
-		if (finger.equals(header)) {
+		if (header.getNext() == null) {
 			header.setNext(newItem);
+			header.getNext().setPrev(header);
 			finger = header.getNext();
-			finger.setPrev(header);
 			last = finger;
 			fingerPosition++;
 		} else {
@@ -89,6 +89,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 			temp.setNext(newItem);
 			newItem.setPrev(temp);
 			finger = newItem;
+			fingerPosition++;
 			last = finger;
 		}
 		size++;
@@ -106,27 +107,23 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 */
 	public E get(int index) {
 		if (index < 0 || index >= size()) {
-			throw new IndexOutOfBoundsException("Array is out of bounds");
+			throw new IndexOutOfBoundsException("Array is out of bounds illegal valu eof " + index);
 		}
-		if(index==0)
-		{
+		if (index == 0) {
 			finger = header.getNext();
 			fingerPosition = 0;
 			return finger.getValue();
-		}
-		else if(index==size-1)
-		{
+		} else if (index == size - 1) {
 			finger = last;
 			fingerPosition = index;
 			return finger.getValue();
-		}
-		else if (index < fingerPosition && index != 0) {
+		} else if (index < fingerPosition && index != 0) {
 			for (int i = fingerPosition; i > index; i--) {
 				finger = finger.getPrev();
 				fingerPosition--;
 			}
 			return finger.getValue();
-		} else if (index > fingerPosition && index != size-1) {
+		} else if (index > fingerPosition && index != size - 1) {
 			for (int i = fingerPosition; i < index; i++) {
 				finger = finger.getNext();
 				fingerPosition++;
@@ -150,23 +147,19 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException("Array is out of bounds");
 		}
-		if(index==0)
-		{
+		if (index == 0) {
 			finger = header.getNext();
 			fingerPosition = 0;
 			finger.setValue(newValue);
 			finger.setLabel(newValue.toString());
 			return finger.getValue();
-		}
-		else if(index==size-1)
-		{
+		} else if (index == size - 1) {
 			last.setValue(newValue);
 			last.setLabel(newValue.toString());
 			finger = last;
 			fingerPosition = index;
 			return finger.getValue();
-		}
-		else if (index > fingerPosition) {
+		} else if (index > fingerPosition) {
 			for (int i = fingerPosition; i < index; i++) {
 				finger = finger.getNext();
 				fingerPosition++;
@@ -184,7 +177,7 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 			return finger.getValue();
 		} else
 			finger.setValue(newValue);
-			finger.setLabel(newValue.toString());
+		finger.setLabel(newValue.toString());
 		return finger.getValue();
 	}
 
@@ -203,55 +196,29 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException("Array is out of bounds");
 		}
-		if(index==0)
-		{
-			DLelement<E> temp = finger;
-			finger = temp.getNext();
-			header.setNext(finger);
-			finger.setPrev(header);
-			fingerPosition = 0;
-			return temp.getValue();
-		}
-		else if(index==size-1)
-		{
-			DLelement<E> temp = last;
-			last = temp.getPrev();
-			last.setPrev(temp.getPrev());
-			finger = last;
-			temp.getPrev().setNext(last);
-			fingerPosition=index;
-			return temp.getValue();
-		}
-		else if (index > fingerPosition) {
-			for (int i = fingerPosition; i < index; i++ ) {
+		if (index > fingerPosition) {
+			for (int i = fingerPosition; i < index; i++) {
 				finger = finger.getNext();
 				fingerPosition++;
 			}
-			DLelement<E> temp = finger;
-			finger = temp.getNext();
-			finger.setPrev(temp.getPrev());
-			finger.getPrev().setNext(finger);
-			size--;
-			return temp.getValue();
 		} else if (index < fingerPosition) {
 			for (int i = fingerPosition; index < i; i--) {
 				finger = finger.getPrev();
 				fingerPosition--;
 			}
-			DLelement<E> temp = finger;
-			finger = temp.getNext();
-			finger.setPrev(temp.getPrev());
-			finger.getPrev().setNext(finger);
-			size--;
-			return temp.getValue();
-		} else {
-			DLelement<E> temp = finger;
-			finger = temp.getNext();
-			finger.setPrev(temp.getPrev());
-			finger.getPrev().setNext(finger);
-			size--;
-			return temp.getValue();
 		}
+
+		DLelement<E> temp = finger;
+		if (finger.getNext() == null) {
+			last = finger.getPrev();
+		} else
+			finger.getNext().setPrev(finger.getPrev());
+		finger.getPrev().setNext(finger.getNext());
+		finger = finger.getPrev();
+		fingerPosition--;
+		size--;
+		return temp.getValue();
+
 	}
 
 	/**
@@ -267,57 +234,53 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 	 *             if the index is out of range (index < 0 || index >= size())
 	 */
 	public void add(int index, E newValue) {
+		if (index < 0 || index > size()) {
+			throw new IndexOutOfBoundsException("error in add method " + index);
+		}
 		DLelement<E> newItem = new DLelement<E>();
 		newItem.setValue(newValue);
 		newItem.setLabel(newValue.toString());
-		if(index==0)
-		{
-			DLelement<E> temp = header.getNext();
-			header.setNext(newItem);
+
+		if (index == size) {
+			add(newValue);
+			return;
+			// do not do this fingerPosition=size;
+		} else if (index == 0) {
+			header.getNext().setPrev(newItem);
 			newItem.setPrev(header);
-			newItem.setNext(temp.getNext());
-			temp.getNext().setPrev(newItem);
+			newItem.setNext(header.getNext());
+			header.setNext(newItem);
 			finger = newItem;
 			fingerPosition = 0;
-		}
-		else if(index==size-1)
-		{
-			last.setNext(newItem);
-			newItem.setPrev(last);
+		} else if (index == size - 1) {
+			last.getPrev().setNext(newItem);
+			newItem.setPrev(last.getPrev());
+			newItem.setNext(last);
+			last.setPrev(newItem);
 			finger = newItem;
-			last = finger;
-			fingerPosition = index;
+			fingerPosition = size - 1;
 		}
-		if (index > fingerPosition) {
-			for (int i = fingerPosition; i < index; i++) {
-				finger = finger.getNext();
-				fingerPosition++;
+
+		else {
+			if (index > fingerPosition) {
+				for (int i = fingerPosition; i < index; i++) {
+					finger = finger.getNext();
+					fingerPosition++;
+				}
+			} else if (index < fingerPosition) {
+				for (int i = fingerPosition; i > index; i--) {
+					finger = finger.getPrev();
+					fingerPosition--;
+				}
 			}
-			newItem.setPrev(finger);
-			newItem.setNext(finger.getNext());
-			finger.getNext().setPrev(newItem);
-			finger.setNext(newItem);
-			}
-		 else if (index < fingerPosition) {
-			for (int i = fingerPosition; i > index; i--) {
-				finger = finger.getPrev();
-				fingerPosition--;
-			}
-			newItem.setPrev(finger);
-			newItem.setNext(finger.getNext());
-			finger.getNext().setPrev(newItem);
-			finger.setNext(newItem);
-		} else if(fingerPosition==index){
-			newItem.setPrev(finger);
-			newItem.setNext(finger.getNext());
-			finger.getNext().setPrev(newItem);
-			finger.setNext(newItem);
+			finger.getPrev().setNext(newItem);
+			newItem.setPrev(finger.getPrev());
+			newItem.setNext(finger);
+			finger.setPrev(newItem);
+			finger = newItem;
 		}
 		size++;
-		}
-		
-
-	
+	}
 
 	/**
 	 * @return the contents of this List as a String
@@ -333,9 +296,21 @@ public class CSC205_Project_1_Linked_List<E> implements java.util.List<E> {
 		return allElements;
 	}
 
+	/**
+	 * Returns the index of the element requested
+	 */
 	public int indexOf(Object target) {
+		fingerPosition = 0;
+		finger = header.getNext();
+		for (int i = 0; i < size - 1; i++) {
+			if (finger.equals(target)) {
+				break;
+			}
+			finger = finger.getNext();
+			fingerPosition++;
+		}
+		return fingerPosition;
 
-		throw (new UnsupportedOperationException());
 	}
 
 	@Override
